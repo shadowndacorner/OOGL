@@ -84,6 +84,31 @@ namespace GL
 		};
 	}
 
+	namespace CullFace
+	{
+		enum cullface_t
+		{
+			FrontAndBack = GL_FRONT_AND_BACK,
+			Back = GL_BACK,
+			Front = GL_FRONT
+		};
+	}
+
+	namespace DepthFunction
+	{
+		enum depthfunc_t
+		{
+			Never = GL_NEVER,
+			Less = GL_LESS,
+			Equal = GL_EQUAL,
+			LEqual = GL_LEQUAL,
+			Greater = GL_GREATER,
+			NotEqual = GL_NOTEQUAL,
+			GEqual = GL_GEQUAL,
+			Always = GL_ALWAYS
+		};
+	}
+
 	/*
 		Stencil test functions
 	*/
@@ -146,6 +171,7 @@ namespace GL
 	{
 	public:
 		void Activate();
+		void Share(const Context& other);
 		
 		void SetVerticalSync( bool enabled );
 
@@ -153,9 +179,14 @@ namespace GL
 		void Disable( Capability::capability_t capability );
 
 		void ClearColor( const Color& col );
+		void ClearColor( const float& r, const float& g, const float& b, const float& a );
+		void ClearDepth( const float& depth );
 		void Clear( Buffer::buffer_t buffers = Buffer::Color | Buffer::Depth );
 
+		void CullFace ( const CullFace::cullface_t& mode);
+
 		void DepthMask( bool writeEnabled );
+		void DepthFunction ( const DepthFunction::depthfunc_t& depth_func );
 		void StencilMask( bool writeEnabled );
 		void StencilMask( uint mask );
 
@@ -178,7 +209,7 @@ namespace GL
 		float Time();
 
 		static Context UseExistingContext();
-
+		static Context CreateBackgroundContext(const Context& fg);
 		~Context();
 
 	private:

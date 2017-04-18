@@ -39,14 +39,34 @@ namespace GL
 		glClearColor( col.R / 255.0f, col.G / 255.0f, col.B / 255.0f, col.A / 255.0f );
 	}
 
+	void Context::ClearColor(const float & r, const float & g, const float & b, const float & a)
+	{
+		glClearColor(r, g, b, a);
+	}
+
+	void Context::ClearDepth(const float & depth)
+	{
+		glClearDepth(depth);
+	}
+
 	void Context::Clear( Buffer::buffer_t buffers )
 	{
 		glClear( buffers );
 	}
 
+	void Context::CullFace(const CullFace::cullface_t& mode)
+	{
+		glCullFace(mode);
+	}
+
 	void Context::DepthMask( bool writeEnabled )
 	{
 		glDepthMask( writeEnabled ? GL_TRUE : GL_FALSE );
+	}
+
+	void Context::DepthFunction(const DepthFunction::depthfunc_t & depth_func)
+	{
+		glDepthFunc(depth_func);
 	}
 
 	void Context::StencilMask( bool writeEnabled )

@@ -113,6 +113,18 @@ namespace GL
 		if ( owned && wglGetCurrentContext() != context ) wglMakeCurrent( dc, context );
 	}
 
+	void Context::Share(const Context & other)
+	{
+		wglShareLists(context, other.context);
+	}
+
+	Context Context::CreateBackgroundContext(const Context& fg)
+	{
+		Context ret;
+		wglShareLists(ret.context, fg.context);
+		return ret;
+	}
+
 	void Context::SetVerticalSync( bool enabled )
 	{
 		wglSwapIntervalEXT( enabled ? 1 : 0 );
