@@ -434,5 +434,8 @@
     <ClCompile Include="..\..\src\GL\Util\Mesh.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\GL\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

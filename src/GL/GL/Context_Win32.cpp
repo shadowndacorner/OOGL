@@ -47,13 +47,14 @@ namespace GL
 		HGLRC dummyContext = wglCreateContext( dummyDC );
 		wglMakeCurrent( dummyDC, dummyContext );
 
+		// Load OpenGL extensions
+		LoadExtensions();
+
 		int major, minor;
 		glGetIntegerv( GL_MAJOR_VERSION, &major );
 		glGetIntegerv( GL_MINOR_VERSION, &minor );
 		if ( major < 3 || ( major == 3 && minor < 2 ) ) throw VersionException();
 
-		// Load OpenGL extensions
-		LoadExtensions();
 
 		// Choose final pixel format
 		const int pixelAttribs[] =
@@ -120,7 +121,7 @@ namespace GL
 
 	Context Context::CreateBackgroundContext(const Context& fg)
 	{
-		Context ret;
+		Context ret = Context(0, 0, 0, 0, fg.dc);
 		wglShareLists(ret.context, fg.context);
 		return ret;
 	}

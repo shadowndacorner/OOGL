@@ -20,6 +20,41 @@
 */
 
 #include <GL/GL/Extensions.hpp>
+#ifdef OOGL_USE_GLAD
+#include <assert.h>
+
+inline void* LoadExtension(const char* name)
+{
+#if defined( OOGL_PLATFORM_WINDOWS )
+	return wglGetProcAddress(name);
+#elif defined( OOGL_PLATFORM_LINUX )
+	return (void*)glXGetProcAddress((const GLubyte*)name);
+#endif
+}
+
+#include <stdio.h>
+static bool extensionsLoaded = false;
+namespace GL
+{
+	void LoadExtensions()
+	{
+		if (extensionsLoaded)
+			return;
+
+#if defined( OOGL_PLATFORM_WINDOWS )
+		wglCreateContextAttribsARB = (WGLCREATECONTEXTATTRIBSARB)LoadExtension("wglCreateContextAttribsARB");
+		wglChoosePixelFormatARB = (WGLCHOOSEPIXELFORMATARB)LoadExtension("wglChoosePixelFormatARB");
+		wglSwapIntervalEXT = (WGLSWAPINTERVALEXT)LoadExtension("wglSwapIntervalEXT");
+#elif defined( OOGL_PLATFORM_LINUX )
+		glXCreateContextAttribsARB = (GLXCREATECONTEXTATTRIBSARB)LoadExtension("glXCreateContextAttribsARB");
+		glXSwapIntervalSGI = (GLXSWAPINTERVALSGI)LoadExtension("glXSwapIntervalSGI");
+#endif
+
+		assert(gladLoadGL());
+		extensionsLoaded = true;
+		printf("Extensions loaded\n");
+	}
+}
 
 #if defined( OOGL_PLATFORM_WINDOWS )
 	WGLCREATECONTEXTATTRIBSARB wglCreateContextAttribsARB;
@@ -29,6 +64,7 @@
 	GLXCREATECONTEXTATTRIBSARB glXCreateContextAttribsARB;
 	GLXSWAPINTERVALSGI glXSwapIntervalSGI;
 #endif
+#else
 
 GLCOMPILESHADER glCompileShader;
 GLCREATESHADER glCreateShader;
@@ -236,3 +272,4 @@ namespace GL
 		glEndTransformFeedback = (GLENDTRANSFORMFEEDBACK)LoadExtension( "glEndTransformFeedback" );
 	}
 }
+#endif

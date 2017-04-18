@@ -57,6 +57,7 @@
     <ClInclude Include="..\..\src\GL\Util\zlib\zutil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\GL\glad.c" />
     <ClCompile Include="..\..\src\GL\GL\Context.cpp" />
     <ClCompile Include="..\..\src\GL\GL\Context_Win32.cpp" />
     <ClCompile Include="..\..\src\GL\GL\Extensions.cpp" />

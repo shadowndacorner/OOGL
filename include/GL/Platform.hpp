@@ -32,7 +32,7 @@
 	#define OOGL_PLATFORM_WINDOWS
 	#include <Windows.h>
 	#include <WindowsX.h>
-	#include <GL/GL.h>
+	#include <glad/glad.h>
 #elif defined( __linux__ )
 	#define OOGL_PLATFORM_LINUX
 	#include <X11/Xlib.h>

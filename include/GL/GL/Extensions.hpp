@@ -24,51 +24,66 @@
 #ifndef OOGL_EXTENSIONS_HPP
 #define OOGL_EXTENSIONS_HPP
 
+#define OOGL_USE_GLAD
+
+#ifdef OOGL_USE_GLAD
+#include <glad/glad.h>
+#include <GL/Platform.hpp>
+
+#if defined( OOGL_PLATFORM_WINDOWS )
+#ifndef APIENTRYP
+#define APIENTRYP WINAPI *
+#endif
+
+typedef ptrdiff_t GLsizeiptr;
+typedef ptrdiff_t GLintptr;
+typedef char GLchar;
+
+#define WGL_CONTEXT_MAJOR_VERSION_ARB 0x2091
+#define WGL_CONTEXT_MINOR_VERSION_ARB 0x2092
+#define WGL_CONTEXT_PROFILE_MASK_ARB 0x9126
+#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB 0x00000001
+
+#define WGL_DRAW_TO_WINDOW_ARB 0x2001
+#define WGL_SUPPORT_OPENGL_ARB 0x2010
+#define WGL_DOUBLE_BUFFER_ARB 0x2011
+#define WGL_PIXEL_TYPE_ARB 0x2013
+#define WGL_COLOR_BITS_ARB 0x2014
+#define WGL_DEPTH_BITS_ARB 0x2022
+#define WGL_STENCIL_BITS_ARB 0x2023
+#define WGL_SAMPLE_BUFFERS_ARB 0x2041
+#define WGL_SAMPLES_ARB 0x2042
+#define WGL_TYPE_RGBA_ARB 0x202B
+
+typedef HGLRC(WINAPI * WGLCREATECONTEXTATTRIBSARB) (HDC hDC, HGLRC hShareContext, const int* attribList);
+extern WGLCREATECONTEXTATTRIBSARB wglCreateContextAttribsARB;
+typedef BOOL(WINAPI * WGLCHOOSEPIXELFORMATARB) (HDC hdc, const int* piAttribIList, const FLOAT* pfAttribFList, UINT nMaxFormats, int* piFormats, UINT* nNumFormats);
+extern WGLCHOOSEPIXELFORMATARB wglChoosePixelFormatARB;
+typedef BOOL(WINAPI * WGLSWAPINTERVALEXT) (int interval);
+extern WGLSWAPINTERVALEXT wglSwapIntervalEXT;
+#elif defined( OOGL_PLATFORM_LINUX )
+#define GLX_CONTEXT_MAJOR_VERSION_ARB 0x2091
+#define GLX_CONTEXT_MINOR_VERSION_ARB 0x2092
+#define GLX_CONTEXT_PROFILE_MASK_ARB 0x9126
+#define GLX_CONTEXT_CORE_PROFILE_BIT_ARB 0x00000001
+
+typedef GLXContext(*GLXCREATECONTEXTATTRIBSARB) (Display* dpy, GLXFBConfig config, GLXContext share_context, Bool direct, const int* attrib_list);
+extern GLXCREATECONTEXTATTRIBSARB glXCreateContextAttribsARB;
+typedef int(*GLXSWAPINTERVALSGI) (int interval);
+extern GLXSWAPINTERVALSGI glXSwapIntervalSGI;
+#endif
+
+namespace GL
+{
+	extern void LoadExtensions();
+}
+
+#else	// ifndef OOGL_USE_GLAD
 #include <GL/Platform.hpp>
 
 /*
 	OpenGL context creation/configuration
 */
-
-#if defined( OOGL_PLATFORM_WINDOWS )
-	#define APIENTRYP WINAPI *
-	typedef ptrdiff_t GLsizeiptr;
-	typedef ptrdiff_t GLintptr;
-	typedef char GLchar;
-	
-	#define WGL_CONTEXT_MAJOR_VERSION_ARB 0x2091
-	#define WGL_CONTEXT_MINOR_VERSION_ARB 0x2092
-	#define WGL_CONTEXT_PROFILE_MASK_ARB 0x9126
-	#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB 0x00000001
-
-	#define WGL_DRAW_TO_WINDOW_ARB 0x2001
-	#define WGL_SUPPORT_OPENGL_ARB 0x2010
-	#define WGL_DOUBLE_BUFFER_ARB 0x2011
-	#define WGL_PIXEL_TYPE_ARB 0x2013
-	#define WGL_COLOR_BITS_ARB 0x2014
-	#define WGL_DEPTH_BITS_ARB 0x2022
-	#define WGL_STENCIL_BITS_ARB 0x2023
-	#define WGL_SAMPLE_BUFFERS_ARB 0x2041
-	#define WGL_SAMPLES_ARB 0x2042
-	#define WGL_TYPE_RGBA_ARB 0x202B
-
-	typedef HGLRC ( WINAPI * WGLCREATECONTEXTATTRIBSARB ) ( HDC hDC, HGLRC hShareContext, const int* attribList );
-	extern WGLCREATECONTEXTATTRIBSARB wglCreateContextAttribsARB;
-	typedef BOOL ( WINAPI * WGLCHOOSEPIXELFORMATARB ) ( HDC hdc, const int* piAttribIList, const FLOAT* pfAttribFList, UINT nMaxFormats, int* piFormats, UINT* nNumFormats );
-	extern WGLCHOOSEPIXELFORMATARB wglChoosePixelFormatARB;
-	typedef BOOL ( WINAPI * WGLSWAPINTERVALEXT ) ( int interval );
-	extern WGLSWAPINTERVALEXT wglSwapIntervalEXT;
-#elif defined( OOGL_PLATFORM_LINUX )
-	#define GLX_CONTEXT_MAJOR_VERSION_ARB 0x2091
-	#define GLX_CONTEXT_MINOR_VERSION_ARB 0x2092
-	#define GLX_CONTEXT_PROFILE_MASK_ARB 0x9126
-	#define GLX_CONTEXT_CORE_PROFILE_BIT_ARB 0x00000001
-
-	typedef GLXContext ( * GLXCREATECONTEXTATTRIBSARB ) ( Display* dpy, GLXFBConfig config, GLXContext share_context, Bool direct, const int* attrib_list );
-	extern GLXCREATECONTEXTATTRIBSARB glXCreateContextAttribsARB;
-	typedef int ( * GLXSWAPINTERVALSGI ) ( int interval );
-	extern GLXSWAPINTERVALSGI glXSwapIntervalSGI;
-#endif
 
 /*
 	Return values/parameters
@@ -477,4 +492,5 @@ namespace GL
 	extern void LoadExtensions();
 }
 
+#endif
 #endif
