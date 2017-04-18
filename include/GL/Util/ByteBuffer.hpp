@@ -39,11 +39,11 @@ namespace GL
 		ByteReader( uint length, bool littleEndian ) : buffer( new uchar[length] ), length( length ), ptr( 0 ), littleEndian( littleEndian ) {}
 		~ByteReader() { delete [] buffer; }
 
-		void Reuse( uint length )
+		void Reuse( uint len )
 		{
 			delete [] buffer;
 			buffer = new uchar[length];
-			this->length = length;
+			length = len;
 			ptr = 0;
 		}
 
@@ -53,11 +53,11 @@ namespace GL
 		void Advance( uint count ) { ptr += count; }
 		void Move( uint location ) { ptr = location; }
 
-		bool Compare( uint location, uint length, const uchar* data )
+		bool Compare( uint location, uint len, const uchar* data )
 		{
-			if ( location + length > this->length ) return false;
+			if ( location + len > length ) return false;
 			
-			for ( uint i = 0; i < length; i++ )
+			for ( uint i = 0; i < len; i++ )
 				if ( buffer[ location + i ] != data[i] ) return false;
 			
 			return true;
@@ -99,11 +99,11 @@ namespace GL
 				return INT_MIN + val - INT_MAX - 1;
 		}
 
-		void Read( uchar* dest, uint length )
+		void Read( uchar* dest, uint len )
 		{
-			for ( uint i = 0; i < length; i++ )
+			for ( uint i = 0; i < len; i++ )
 				dest[i] = buffer[ptr+i];
-			ptr += length;
+			ptr += len;
 		}
 
 	private:
@@ -125,7 +125,7 @@ namespace GL
 		ByteWriter( bool littleEndian ) : littleEndian( littleEndian ) {};
 
 		uchar* Data() { return &buffer[0]; }
-		uint Length() { return buffer.size(); }
+		size_t Length() { return buffer.size(); }
 
 		void Pad( uint count )
 		{

@@ -72,7 +72,7 @@ namespace GL
 		void Vec4( const Vec4& v ) { Bytes( (uchar*)&v, sizeof( v ) ); }
 
 		void* Pointer() { return &data[0]; }
-		int Size() { return data.size(); }
+		size_t Size() { return data.size(); }
 
 	private:
 		std::vector<uchar> data;

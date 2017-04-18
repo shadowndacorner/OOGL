@@ -48,21 +48,21 @@ namespace GL
 	class GC
 	{
 	public:		
-		void Create( GLuint& obj, createFunc c, deleteFunc d )
+		void Create( GLuint& obj, createFunc c, deleteFunc dd )
 		{
 			c( 1, &obj );
 			refs.insert( std::pair<GLuint, uint>( obj, 1 ) );
 			
-			this->d = d;
-			this->d2 = 0;
+			d = dd;
+			d2 = 0;
 		}
 
-		int Create( const GLuint& obj, deleteFunc2 d2 )
+		int Create( const GLuint& obj, deleteFunc2 dd2 )
 		{
 			refs.insert( std::pair<GLuint, uint>( obj, 1 ) );
 
-			this->d = 0;
-			this->d2 = d2;
+			d = 0;
+			d2 = dd2;
 			
 			return obj;
 		}
