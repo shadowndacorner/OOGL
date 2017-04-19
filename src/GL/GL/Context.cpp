@@ -21,6 +21,7 @@
 
 #include <GL/GL/Context.hpp>
 #include <GL/GL/Extensions.hpp>
+#include <GL/GLU.h>
 
 namespace GL
 {
@@ -145,6 +146,22 @@ namespace GL
 	{
 		glBindVertexArray( vao );
 		glDrawElements( mode, count, type, (const GLvoid*)offset );
+	}
+
+	bool Context::PrintError(std::string* err)
+	{
+		int ercode;
+		if ((ercode = glGetError()) != 0)
+		{
+			char buf[512];
+			memset(buf, 0, 512);
+
+			sprintf(buf, "%s", gluErrorString(ercode));
+			if (err)
+				(*err) = buf;
+			return true;
+		}
+		return false;
 	}
 
 	Context Context::UseExistingContext()

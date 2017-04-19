@@ -78,6 +78,7 @@ namespace GL
 		std::vector<uchar> data;
 
 		void Bytes( uchar* bytes, uint count ) {
+			data.reserve(count);
 			for ( uint i = 0; i < count; i++ )
 				data.push_back( bytes[i] );
 		}

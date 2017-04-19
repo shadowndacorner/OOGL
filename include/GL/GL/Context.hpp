@@ -206,6 +206,8 @@ namespace GL
 		void DrawArrays( const VertexArray& vao, Primitive::primitive_t mode, uint offset, uint vertices );
 		void DrawElements( const VertexArray& vao, Primitive::primitive_t mode, intptr_t offset, uint count, uint type );
 
+		bool PrintError(std::string* err);
+
 		float Time();
 
 		static Context UseExistingContext();
