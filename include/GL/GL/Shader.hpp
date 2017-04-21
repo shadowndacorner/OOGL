@@ -41,9 +41,13 @@ namespace GL
 	{
 		enum shader_type_t 
 		{
+			None = 0,
 			Vertex = GL_VERTEX_SHADER,
+			TesselationControl = GL_TESS_CONTROL_SHADER,
+			TesselationEval = GL_TESS_EVALUATION_SHADER,
+			Geometry = GL_GEOMETRY_SHADER,
 			Fragment = GL_FRAGMENT_SHADER,
-			Geometry = GL_GEOMETRY_SHADER
+			Compute = GL_COMPUTE_SHADER
 		};
 	}
 

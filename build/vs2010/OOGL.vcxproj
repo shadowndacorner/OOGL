@@ -73,6 +73,7 @@
     <ClCompile Include="..\..\src\GL\Math\Vec2.cpp" />
     <ClCompile Include="..\..\src\GL\Math\Vec3.cpp" />
     <ClCompile Include="..\..\src\GL\Math\Vec4.cpp" />
+    <ClCompile Include="..\..\src\GL\Platform.cpp" />
     <ClCompile Include="..\..\src\GL\Util\Image.cpp" />
     <ClCompile Include="..\..\src\GL\Util\libjpeg\jaricom.c" />
     <ClCompile Include="..\..\src\GL\Util\libjpeg\jcapimin.c" />

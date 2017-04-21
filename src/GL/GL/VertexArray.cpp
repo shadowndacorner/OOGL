@@ -20,12 +20,20 @@
 */
 
 #include <GL/GL/VertexArray.hpp>
+#include <assert.h>
 
 namespace GL
 {
 	VertexArray::VertexArray()
 	{
-		gc.Create( obj, glGenVertexArrays, glDeleteVertexArrays );
+		if (SupportsDSA())
+		{
+			gc.Create(obj, glCreateVertexArrays, glDeleteVertexArrays);
+		}
+		else
+		{
+			gc.Create(obj, glGenVertexArrays, glDeleteVertexArrays);
+		}
 	}
 
 	VertexArray::VertexArray( const VertexArray& other )
@@ -52,15 +60,16 @@ namespace GL
 	void VertexArray::BindAttribute( const Attribute& attribute, const VertexBuffer& buffer, Type::type_t type, uint count, uint stride, intptr_t offset )
 	{
 		glBindVertexArray( obj );
-		glBindBuffer( GL_ARRAY_BUFFER, buffer );
+		glBindBuffer( buffer.GetType(), buffer );
 		glEnableVertexAttribArray( attribute );
 		glVertexAttribPointer( attribute, count, type, GL_FALSE, stride, (const GLvoid*)offset );
 	}
 
 	void VertexArray::BindElements( const VertexBuffer& elements )
 	{
+		assert(elements.GetType() == BufferTypes::ElementBuffer);
 		glBindVertexArray( obj );
-		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, elements );
+		glBindBuffer( elements.GetType(), elements );
 	}
 
 	void VertexArray::BindTransformFeedback( uint index, const VertexBuffer& buffer )

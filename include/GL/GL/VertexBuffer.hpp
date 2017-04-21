@@ -35,6 +35,21 @@
 namespace GL
 {
 	/*
+		Buffer types
+	*/
+
+	namespace BufferTypes
+	{
+		enum buffer_type_t
+		{
+			None = 0,
+			ElementBuffer = GL_ELEMENT_ARRAY_BUFFER,
+			ArrayBuffer = GL_ARRAY_BUFFER,
+			UniformBuffer = GL_UNIFORM_BUFFER
+		};
+	}
+
+	/*
 		Buffer usage types
 	*/
 	namespace BufferUsage
@@ -92,10 +107,13 @@ namespace GL
 	public:
 		VertexBuffer();
 		VertexBuffer( const VertexBuffer& other );
-		VertexBuffer( const void* data, size_t length, BufferUsage::buffer_usage_t usage );
-		VertexBuffer( const Mesh& mesh, BufferUsage::buffer_usage_t usage, std::function<void ( const Vertex& v, VertexDataBuffer& data )> f );
 
 		~VertexBuffer();
+
+		uint32_t GetType() const;
+		uint32_t GetHandle() const;
+
+		void Initialize(const BufferTypes::buffer_type_t& type);
 
 		operator GLuint() const;
 		const VertexBuffer& operator=( const VertexBuffer& other );
@@ -107,6 +125,7 @@ namespace GL
 
 	private:
 		static GC gc;
+		BufferTypes::buffer_type_t type;
 		GLuint obj;
 	};
 }

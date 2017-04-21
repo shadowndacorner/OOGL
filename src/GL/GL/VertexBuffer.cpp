@@ -19,43 +19,49 @@
 	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
 */
 
+#include <GL/Platform.hpp>
 #include <GL/GL/VertexBuffer.hpp>
 #include <vector>
+#include <cassert>
 
 namespace GL
 {
-	VertexBuffer::VertexBuffer()
+	VertexBuffer::VertexBuffer() : type(BufferTypes::None)
 	{
-		gc.Create( obj, glGenBuffers, glDeleteBuffers );
+		if (SupportsDSA())
+		{
+			gc.Create(obj, glCreateBuffers, glDeleteBuffers);
+		}
+		else
+		{
+			gc.Create(obj, glGenBuffers, glDeleteBuffers);
+		}
 	}
 
-	VertexBuffer::VertexBuffer( const VertexBuffer& other )
+	VertexBuffer::VertexBuffer( const VertexBuffer& other ) : type(other.type)
 	{
 		gc.Copy( other.obj, obj );
-	}
-
-	VertexBuffer::VertexBuffer( const void* data, size_t length, BufferUsage::buffer_usage_t usage )
-	{
-		gc.Create( obj, glGenBuffers, glDeleteBuffers );
-		Data( data, length, usage );
-	}
-
-	VertexBuffer::VertexBuffer( const Mesh& mesh, BufferUsage::buffer_usage_t usage, std::function<void ( const Vertex& v, VertexDataBuffer& data )> f )
-	{
-		VertexDataBuffer data;
-		const Vertex* vertices = mesh.Vertices();
-		uint count = mesh.VertexCount();
-
-		for ( uint i = 0; i < count; i++ )
-			f( vertices[i], data );
-
-		gc.Create( obj, glGenBuffers, glDeleteBuffers );
-		Data( data.Pointer(), data.Size(), usage );
 	}
 
 	VertexBuffer::~VertexBuffer()
 	{
 		gc.Destroy( obj );
+	}
+
+	uint32_t VertexBuffer::GetType() const
+	{
+		return type;
+	}
+
+	uint32_t VertexBuffer::GetHandle() const
+	{
+		return obj;
+	}
+
+	void VertexBuffer::Initialize(const BufferTypes::buffer_type_t & tgtype)
+	{
+		assert(type == BufferTypes::None);
+		type = tgtype;
 	}
 
 	VertexBuffer::operator GLuint() const
@@ -69,22 +75,36 @@ namespace GL
 		return *this;
 	}
 
-	void VertexBuffer::Data( const void* data, size_t length, BufferUsage::buffer_usage_t usage )
+	void VertexBuffer::Data(const void* data, size_t length, BufferUsage::buffer_usage_t usage)
 	{
-		glBindBuffer( GL_ARRAY_BUFFER, obj );
-		glBufferData( GL_ARRAY_BUFFER, length, data, usage );
+		if (SupportsDSA())
+		{
+			glNamedBufferData(obj, length, data, usage);
+		}
+		else
+		{
+			glBindBuffer(type, obj);
+			glBufferData(type, length, data, usage);
+		}
 	}
 
-	void VertexBuffer::SubData( const void* data, size_t offset, size_t length )
+	void VertexBuffer::SubData(const void* data, size_t offset, size_t length)
 	{
-		glBindBuffer( GL_ARRAY_BUFFER, obj );
-		glBufferSubData( GL_ARRAY_BUFFER, offset, length, data );
+		if (SupportsDSA())
+		{
+			glNamedBufferSubData(obj, offset, length, data);
+		}
+		else
+		{
+			glBindBuffer(type, obj);
+			glBufferSubData(type, offset, length, data);
+		}
 	}
 
-	void VertexBuffer::GetSubData( void* data, size_t offset, size_t length )
+	void VertexBuffer::GetSubData(void* data, size_t offset, size_t length)
 	{
-		glBindBuffer( GL_ARRAY_BUFFER, obj );
-		glGetBufferSubData( GL_ARRAY_BUFFER, offset, length, data );
+		glBindBuffer(type, obj);
+		glGetBufferSubData(type, offset, length, data);
 	}
 
 	GC VertexBuffer::gc;

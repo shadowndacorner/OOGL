@@ -71,6 +71,23 @@ namespace GL
 
 	typedef GLint Attribute;
 	typedef GLint Uniform;
+	
+	// These all test for whether or not a function added in the
+	// appropriate extension exists.
+	static inline bool SupportsDSA()
+	{
+		return glCreateVertexArrays != nullptr;
+	}
+
+	static inline bool SupportsBindless()
+	{
+		return glMakeTextureHandleResidentARB != nullptr;
+	}
+
+	static inline bool SupportsSparseTextures()
+	{
+		return glTexPageCommitmentARB != nullptr;
+	}
 }
 
 #endif
